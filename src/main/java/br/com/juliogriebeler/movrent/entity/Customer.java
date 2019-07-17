@@ -1,13 +1,16 @@
 package br.com.juliogriebeler.movrent.entity;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Julio Griebeler
@@ -17,7 +20,7 @@ import java.util.Date;
 public class Customer extends AbstractEntity implements UserDetails {
 
     @NotNull
-    private String username;
+    private String email;
     @NotNull
     private String password;
     @NotNull
@@ -30,11 +33,12 @@ public class Customer extends AbstractEntity implements UserDetails {
     @NotNull
     private Role role;
 
-    public Customer() {
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -83,17 +87,17 @@ public class Customer extends AbstractEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(this.getRole().toString());
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.email;
     }
 
     @Override

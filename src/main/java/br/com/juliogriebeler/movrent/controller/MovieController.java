@@ -7,6 +7,7 @@ import br.com.juliogriebeler.movrent.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -51,6 +52,7 @@ public class MovieController {
     }
 
     @PostMapping
+    //@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_APPLICATION')")
     public ResponseEntity create(@RequestBody MovieRequest movieRequest) {
         return this.movieService.addMovie(movieRequest);
     }

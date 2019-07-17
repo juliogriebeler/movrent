@@ -3,6 +3,7 @@ package br.com.juliogriebeler.movrent.configuration;
 import br.com.juliogriebeler.movrent.service.CustomerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  * @author Julio Griebeler
  */
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -28,32 +30,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        // Caminhos "abertos"
         http.authorizeRequests().antMatchers("/", "/login", "/logout", "swagger-ui.html").permitAll();
-        // /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
-        // If no login, it will redirect to /login page.
         http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
-        // Somente Admin
-        http.authorizeRequests().antMatchers("/api").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
-        // When the user has logged in as XX.
-        // But access a page that requires role YY,
-        // AccessDeniedException will be thrown.
+        http.authorizeRequests().antMatchers("/api").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_APPLICATION')");
         http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
-        // Config for Login Form
-        http.authorizeRequests()
-                .and()
-                .formLogin()//
-                .loginProcessingUrl("/j_spring_security_check") // Submit URL
-                .loginPage("/login")//
-                .failureUrl("/login?error=true")//
-                .usernameParameter("username")//
-                .passwordParameter("password")
+        http
+                .httpBasic()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
+                .logoutSuccessUrl("/logout_success")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+                .and()
+                .authorizeRequests();
     }
 
     @Bean
@@ -67,9 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.
-                userDetailsService(customerDetailsService).passwordEncoder(passwordEncoder());
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customerDetailsService).passwordEncoder(passwordEncoder());
     }
 }

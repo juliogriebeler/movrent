@@ -2,11 +2,11 @@ package br.com.juliogriebeler.movrent.controller;
 
 import br.com.juliogriebeler.movrent.controller.request.RentRequest;
 import br.com.juliogriebeler.movrent.controller.request.RentUpdateRequest;
-import br.com.juliogriebeler.movrent.entity.Rent;
 import br.com.juliogriebeler.movrent.repository.RentRepository;
 import br.com.juliogriebeler.movrent.service.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,11 +38,13 @@ public class RentController {
     }
 
     @PostMapping
+    //@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_APPLICATION')")
     public ResponseEntity create(@Valid @RequestBody RentRequest rentRequest) {
         return this.rentService.save(rentRequest);
     }
 
     @PutMapping
+    //@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_APPLICATION')")
     public ResponseEntity update(@Valid @RequestBody RentUpdateRequest rentUpdateRequest) {
         return this.rentService.update(rentUpdateRequest);
     }

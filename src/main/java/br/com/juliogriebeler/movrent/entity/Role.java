@@ -5,5 +5,6 @@ package br.com.juliogriebeler.movrent.entity;
  */
 public enum Role {
     ADMIN,
-    USER;
+    USER,
+    APPLICATION;
 }

@@ -1,5 +1,7 @@
 package br.com.juliogriebeler.movrent.controller.request;
 
+import br.com.juliogriebeler.movrent.entity.Role;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -11,19 +13,11 @@ public class CustomerRequest {
     @NotNull
     private String password;
     @NotNull
-    private String role;
+    private Role role;
     @NotNull
-    private String username;
+    private String email;
     @NotNull
-    private Date birth_date;
-
-    public Date getBirth_date() {
-        return birth_date;
-    }
-
-    public void setBirth_date(Date birth_date) {
-        this.birth_date = birth_date;
-    }
+    private Date birthDate;
 
     public String getFirstName() {
         return firstName;
@@ -49,19 +43,27 @@ public class CustomerRequest {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 }

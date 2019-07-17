@@ -8,6 +8,7 @@ import br.com.juliogriebeler.movrent.service.CustomerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,31 +34,10 @@ public class AuthController {
         return this.customerDetailsService.login(loginRequest);
     }
 
-    /*
-        @PostMapping("/logout")
-        public ResponseEntity logout() {
-            UserDetails userDetails = this.movRentUserDetailsService.loadUserByUsername(loginRequest.getUsername());
-            if(userDetails.getPassword().equals(new BCryptPasswordEncoder().encode(loginRequest.getPassword()))) {
-                return ResponseEntity.ok().body("Logado com sucesso");
-            }
-            return new ResponseEntity("Não autorizado", HttpStatus.UNAUTHORIZED);
-        }
-    */
     @PostMapping("/register")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('APPLICATION')")
     public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
-        Customer customer = new Customer();
-        customer.setFirstName(registerRequest.getFirstName());
-        customer.setLastName(registerRequest.getLastName());
-        customer.setUsername(registerRequest.getUsername());
-        customer.setPassword(new BCryptPasswordEncoder().encode(registerRequest.getPassword()));
-        customer.setActive(true);
-        customer.setRole(registerRequest.getRole());
-        customer.setBirthDate(registerRequest.getBirthDate());
-        UserDetails userDetails = this.customerRepository.save(customer);
-        if (null != userDetails) {
-            return ResponseEntity.ok().body(userDetails);
-        }
-        return new ResponseEntity("Erro ao registrar", HttpStatus.UNAUTHORIZED);
+        return this.customerDetailsService.register(registerRequest);
     }
 
 }
