@@ -3,8 +3,10 @@
 ### Aplicação Spring Boot
 
 #### Informações baseadas no servidor local e porta default do Spring Boot(localhost:8080), então caso utilize outro, levar isso em conta.  
+#### Versão do Java: 8
 
-1 - Executar o script sql da pasta resources para criar o banco de dados, tabelas e usuários
+1 - Executar o script sql da pasta resources para criar o banco de dados, tabelas e usuários. O banco utilizado foi MySQL.
+O script cria os parâmetros de acesso apontados na configuração do projeto (application.properties).
 
 2 - Executar a aplicação spring boot pela IDE, Maven(comando mvn spring-boot:run), Gradle, etc.
 
